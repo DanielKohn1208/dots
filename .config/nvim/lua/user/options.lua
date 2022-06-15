@@ -64,4 +64,7 @@ function! Settings()
 		setlocal softtabstop=2
 		echo "things are being fixed"
 endfunction
+
+map <C-i> <Nop>
+map <C-o> <Nop>
 ]])

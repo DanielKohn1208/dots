@@ -1,4 +1,4 @@
-#! bin/sh
+#! /usr/bin/bash
 
 # Terminal already running bar intances 
 killall -q polybar
@@ -7,6 +7,6 @@ killall -q polybar
 while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
 # launch bar
-polybar example &
+polybar main&
 
 

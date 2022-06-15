@@ -21,6 +21,7 @@ from libqtile import hook
 
 mod = "mod4"
 terminal = "alacritty"
+webbrowser = "qutebrowser"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -61,6 +62,7 @@ keys = [
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "w", lazy.spawn(webbrowser), desc="Launch web browser"),
     # Toggle between different layouts as defined below
     Key([mod], "space", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
@@ -84,25 +86,34 @@ keys = [
         "amixer -c 0 sset Master 2+ unmute")),
 ]
 
-groups = [Group(i) for i in "123456789"]
+# groups = [Group(i) for i in "123456789"]
+groups=[
+    Group("爵",matches=[Match(wm_class=[])]),
+    Group("", matches=[Match(wm_class=["dev"])]),
+    Group("ﭮ",matches=[Match(wm_class=["discord"])]),
+    Group("",matches=[Match(wm_class=["obsidian"])]),
+    Group("",matches=[Match(wm_class=["spotify"])]),
+    Group("",matches=[Match(wm_class=[])]),
+    Group("",matches=[Match(wm_class=[])]),
+]
 
-for i in groups:
+for k, group in zip(["1","2","3","4","5","6"], groups):
     keys.extend(
         [
             # mod1 + letter of group = switch to group
             Key(
                 [mod],
-                i.name,
-                lazy.group[i.name].toscreen(),
-                desc="Switch to group {}".format(i.name),
+                k,
+                lazy.group[group.name].toscreen(),
+                desc="Switch to group {}".format(group.name),
             ),
             # mod1 + shift + letter of group = switch to & move focused window to group
             Key(
                 [mod, "shift"],
-                i.name,
-                lazy.window.togroup(i.name, switch_group=True),
+                k,
+                lazy.window.togroup(group.name, switch_group=True),
                 desc="Switch to & move focused window to group {}".format(
-                    i.name),
+                    group.name),
             ),
             Key(
                 [mod],
@@ -185,43 +196,43 @@ screens = [
                     this_current_screen_border="#88C0D0",
                 ),
 
-                widget.WindowName(max_chars=50),
-                left_half_circle(nord["nord15"]),
+                widget.WindowName(max_chars=50, foreground=nord["nord13"], fmt="    {}"),
+                left_half_circle(nord["nord10"]),
                 widget.PulseVolume(
                     fmt="奔{}",
-                    background=nord["nord15"],
+                    background=nord["nord10"],
                     mouse_callbacks={
                         "Button1": lazy.spawn("pavucontrol"),
                     },
                 ),
-                right_half_circle(nord["nord15"]),
+                right_half_circle(nord["nord10"]),
 
                 widget.Spacer(length=10),
-                left_half_circle(nord["nord7"]),
+                left_half_circle(nord["nord10"]),
                 widget.KeyboardLayout(
-                    configured_keyboards=["us", "ca"], fmt=" {}", background=nord["nord7"]
+                    configured_keyboards=["us", "ca"], fmt=" {}", background=nord["nord10"]
                 ),
-                right_half_circle(nord["nord7"]),
+                right_half_circle(nord["nord10"]),
                 widget.Spacer(length=10),
-                left_half_circle(nord["nord8"]),
+                left_half_circle(nord["nord10"]),
                 widget.CPU(
                     format=" {load_percent}%",
-                    background=nord["nord8"],
+                    background=nord["nord10"],
                     mouse_callbacks={
                         "Button1": lazy.spawn("alacritty --class htop -e htop"),
                     },
                 ),
-                right_half_circle(nord["nord8"]),
+                right_half_circle(nord["nord10"]),
                 widget.Spacer(length=10),
-                left_half_circle(nord["nord9"]),
+                left_half_circle(nord["nord10"]),
                 widget.Memory(
                     fmt="{}",
-                    background=nord["nord9"],
+                    background=nord["nord10"],
                     mouse_callbacks={
                         "Button1": lazy.spawn("alacritty --class htop -e htop"),
                     },
                 ),
-                right_half_circle(nord["nord9"]),
+                right_half_circle(nord["nord10"]),
                 widget.Spacer(length=10),
                 left_half_circle(nord["nord10"]),
                 widget.Clock(format=" %Y-%m-%d %a %I:%M %p",

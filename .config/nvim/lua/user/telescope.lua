@@ -3,7 +3,6 @@ if not status_ok then
   return
 end
 
-telescope.load_extension('media_files')
 
 local actions = require "telescope.actions"
 
@@ -16,13 +15,13 @@ telescope.setup {
 
     mappings = {
       i = {
-        ["<C-n>"] = actions.cycle_history_next,
-        ["<C-p>"] = actions.cycle_history_prev,
+        -- ["<C-o>"] = actions.cycle_history_next,
+        -- ["<C-i>"] = actions.cycle_history_prev,
+        ["<C-p>"] = actions.close,
 
         ["<C-j>"] = actions.move_selection_next,
         ["<C-k>"] = actions.move_selection_previous,
 
-        ["<C-c>"] = actions.close,
 
         ["<Down>"] = actions.move_selection_next,
         ["<Up>"] = actions.move_selection_previous,
@@ -89,13 +88,7 @@ telescope.setup {
     -- builtin picker
   },
   extensions = {
-    media_files = {
-        -- filetypes whitelist
-        -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
-        filetypes = {"png", "webp", "jpg", "jpeg"},
-        find_cmd = "rg" -- find command (defaults to `fd`)
-      }
-    -- Your extension configuration goes here:
+   -- Your extension configuration goes here:
     -- extension_name = {
     --   extension_config_key = value,
     -- }

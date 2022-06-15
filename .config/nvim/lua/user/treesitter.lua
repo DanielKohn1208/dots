@@ -12,6 +12,6 @@ configs.setup {
     disable = { "" }, -- list of language that will be disabled
     additional_vim_regex_highlighting = true,
   },
-  indent = { enable = true, disable = { "yaml", "python" } }, --fixes indenting sometimes and it makes it less trash
+  indent = { enable = true, disable = { "yaml","python" } }, --fixes indenting sometimes and it makes it less trash
 
 }

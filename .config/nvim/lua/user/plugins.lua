@@ -40,9 +40,8 @@ packer.init({
 
 -- Install your plugins here
 return packer.startup(function(use)
-
 	use("lewis6991/impatient.nvim")
-	require('impatient')
+	require("impatient")
 	-- My plugins here
 	use("wbthomason/packer.nvim") -- Have packer manage itself
 	use("nvim-lua/popup.nvim") -- An implementation of the Popup API from vim in Neovim
@@ -83,7 +82,6 @@ return packer.startup(function(use)
 
 	-- Telescope
 	use("nvim-telescope/telescope.nvim")
-	use("nvim-telescope/telescope-media-files.nvim")
 
 	-- TreeSitter
 	use({
@@ -94,7 +92,13 @@ return packer.startup(function(use)
 	--Git + Github
 	use("lewis6991/gitsigns.nvim")
 
-	--VimWiki
+	-- Markdown stuff
+	use({
+		"iamcco/markdown-preview.nvim",
+		run = function()
+			vim.fn["mkdp#util#install"]()
+		end,
+	})
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins
