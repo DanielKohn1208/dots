@@ -1,0 +1,116 @@
+@page "/files"
+@inject IFilesViewModel _filesViewModel
+@inject IJSRuntime JSRuntime
+@inject NavigationManager _navigationManager
+
+<h1>Files</h1>
+
+<h2>Your Files</h2>
+@if(_filesViewModel.AllUserFiles.Count() > 0)
+{
+    <table class="table ">  
+        <tr>
+            <th>Title</th>
+            <th>Date Added</th>
+            <th>Download</th>
+            <th>Delete</th>
+        </tr>
+            @foreach(var userFileInfo in _filesViewModel.AllUserFiles)
+            {
+                <tr>
+                    <td>@userFileInfo.FullFileName</td>
+                    <td>@userFileInfo.DateCreated</td>
+                    <td>
+                        <a class="btn btn-outline-dark" href=@($"https://localhost:5001/filemanagement/getfile/{userFileInfo.FileId}") download=@userFileInfo.FullFileName target="_top">
+                            Download
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger" @onclick="() => DeleteFile(userFileInfo.FileId)">Delete</button>
+                    </td>
+                </tr>
+                
+            }
+    </table> 
+}
+
+else
+{
+    <p>Your uploaded files will show up when </p>
+}
+<h2>Upload</h2>
+
+<form @onsubmit="SubmitFiles">
+    <InputFile class="btn btn-outline-dar" OnChange="OnInputFileChange" />
+    <br /><br />
+    <button class="btn btn-outline-dark" type="submit">Upload Selected File</button>
+</form>
+<p class="text-danger">@ErrorMessage</p>
+
+<p class="text-dark">@StatusMessage</p>
+
+@code{
+    public string ErrorMessage{get; set;} = String.Empty;
+    public string StatusMessage{get; set;} = String.Empty;
+    
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState{get; set;}
+    
+
+
+    public void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        _filesViewModel.SelectedFile = e.File;
+    }
+    
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await authenticationState;
+        if(!authState.User.Identity.IsAuthenticated)
+        {
+            _navigationManager.NavigateTo("/");
+            return;
+        }
+        await _filesViewModel.GetFiles();
+    }
+
+    protected async Task SubmitFiles()
+    {
+        if(_filesViewModel.SelectedFile==null)
+        {
+            Console.WriteLine("here");
+            ErrorMessage = "You need to select a file to upload";
+            return;
+        }
+        if(_filesViewModel.SelectedFile.Size > 250000000)
+        {
+            ErrorMessage = "File is too large. It must be smaller than 250mb.";
+            return;  
+        }
+        ErrorMessage = String.Empty;
+        StatusMessage = $"Uploading {_filesViewModel.SelectedFile.Name} to server... (This may take a while depending on file size)";
+        var  response = await _filesViewModel.OnSubmit();
+        if(response.IsSuccessStatusCode)
+        {
+            StatusMessage = $"{_filesViewModel.SelectedFile.Name} was successfully uploaded to the server";
+            await _filesViewModel.GetFiles();
+        }
+        else
+        {
+            StatusMessage=String.Empty;
+            ErrorMessage = await response.Content.ReadAsStringAsync();
+        }
+    
+
+    }
+
+    protected async Task DeleteFile(int id)
+    {
+        Console.WriteLine("we are deleting a file");
+        await _filesViewModel.DeleteFile(id);
+        await _filesViewModel.GetFiles();
+    }
+
+    
+}

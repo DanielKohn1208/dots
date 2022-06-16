@@ -1,0 +1,118 @@
+@page "/root"
+@inject NavigationManager _navigationManager
+@inject IRootViewModel _rootViewModel
+@inject IModalService Modal
+@if(IsRoot)
+{
+    <h2><b>Root Controls</b></h2>
+
+    <h3>Add User</h3>
+    <div class="mb-3">
+        <label for="inputUsername" class="form-label">Username</label> 
+        <input id="inputUsername" type="text" @bind="@_rootViewModel.Username" class="form-control" placeholder="Username">
+        <p class="text-danger">@UsernameValidation</p>
+    </div>
+
+    <div class="mb-3">
+        <label for="inputPassword" class="form-label">Password</label> 
+        <input id="inputPassword" type="password" @bind="@_rootViewModel.Password" class="form-control" placeholder="Password">
+        <p class="text-danger">@PasswordValidation</p>
+
+    </div>
+
+    <div class="mb-3">
+        <button class="btn btn-outline-dark" @onclick="CreateUser">Add User</button>
+    </div>
+    <p class="text-danger">@ServerValidation</p>
+
+    <h3>Users</h3>
+    <table class="table">
+        <tr>
+            <td scope="col">Username</td>
+            <td scope="col">View Files</td>
+            <td scope="col">Delete</td>
+        </tr>
+        @foreach(var user in @_rootViewModel.Users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>
+                    <a class="btn btn-outline-dark" href=@($"https://localhost:5001/rootfiles/{user.Id}")>View Files</a>
+                </td>
+                <td>
+                    <button class="btn btn-outline-danger" @onclick="() => DeleteUser(user.Id)">Delete User</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>You are not authorized to view ths page</p>
+}
+
+
+@code{ 
+    //error messages
+    public string UsernameValidation{get; set;}
+    public string PasswordValidation{get; set;}
+    public string ServerValidation{get; set;}
+
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState{get; set;}
+    
+    public bool IsRoot{ get; set;} = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationState;
+        if(!authState.User.Identity.IsAuthenticated)
+        {
+            _navigationManager.NavigateTo("/");
+            return;
+        }
+        if(!authState.User.IsInRole("root"))
+        {
+            return;
+        }
+        IsRoot = true;
+        await _rootViewModel.GetUsers();
+    }
+
+    protected async Task CreateUser()
+    {
+        PasswordValidation = String.Empty;
+        UsernameValidation = String.Empty;
+        if(_rootViewModel.Username.Length>16 || _rootViewModel.Username==String.Empty)
+        {
+            UsernameValidation = "The username chosen must be between 0 and 16 characters";
+            if(_rootViewModel.Password.Length>16 ||_rootViewModel.Password==String.Empty)
+            {
+                PasswordValidation = "The password chosen must be between 0 and 16 characters long";
+            }
+            return;
+        }
+        if(_rootViewModel.Password.Length>16 || _rootViewModel.Password==String.Empty)
+        {
+            PasswordValidation = "The password chosen must be between 0 and 16 characters long";
+            return;
+        }
+        var response = await _rootViewModel.CreateUser();
+        if(!response.IsSuccessStatusCode)
+        { 
+            ServerValidation = await response.Content.ReadAsStringAsync();
+            return; 
+        }
+        Console.WriteLine("thins would appear to be working");
+        await _rootViewModel.GetUsers();
+        
+    }
+
+    protected async Task DeleteUser(long id)
+    {
+        await _rootViewModel.DeleteUser(id);
+        await _rootViewModel.GetUsers();
+    }
+
+
+}

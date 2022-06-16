@@ -1,0 +1,70 @@
+@page "/rootfiles/{Id:int}"
+@inject NavigationManager _navigationManager
+@inject IRootFilesViewModel _rootFilesViewModel
+@if(IsRoot)
+{
+    <a href="https://localhost:5001/root">Return to the root page</a>
+    <h1>@(_rootFilesViewModel.UserInfo.UserName)'s files</h1>
+    <table class="table">
+        <tr>
+            <th>File Name</th>
+            <th>Date Created</th>
+            <th>Download</th>
+            <th>Delete</th>
+        </tr>
+        @foreach(var userFileInfo in _rootFilesViewModel.AllUserFiles)
+        {
+            <tr>
+                <td>@userFileInfo.FullFileName</td>
+                <td>@userFileInfo.DateCreated</td>
+                <td>
+                    <a class="btn btn-outline-dark" href=@($"https://localhost:5001/filemanagement/getfile/{userFileInfo.FileId}") download=@userFileInfo.FullFileName target="_top">
+                        Download
+                    </a>
+                </td>
+                <td>
+                    <button class="btn btn-outline-danger" @onclick="() => DeleteFile(userFileInfo.FileId)">Delete</button>
+                </td>
+            </tr>
+            
+        }
+    </table>
+}
+else
+{
+    <p>You are not authorized to view this page.</p>
+}
+@code {
+    [Parameter]
+    public int Id{ get; set; }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState{get; set;}
+
+    public bool IsRoot {get; set;} = false;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await authenticationState;
+        if(!authState.User.Identity.IsAuthenticated)
+        {
+            _navigationManager.NavigateTo("/");
+            return;
+        }
+        if(!authState.User.IsInRole("root"))
+        {
+            return;
+        }
+        IsRoot = true;
+        await _rootFilesViewModel.GetUser(Id);
+        Console.WriteLine("boutta call this ");
+        await _rootFilesViewModel.GetFiles(Id);
+    }
+
+    protected async Task DeleteFile(int id)
+    {
+
+        await _rootFilesViewModel.DeleteFile(id);
+        await _rootFilesViewModel.GetFiles(Id);
+    }
+}

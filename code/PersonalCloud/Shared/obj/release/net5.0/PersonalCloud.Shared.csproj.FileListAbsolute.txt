@@ -1,0 +1,12 @@
+/home/daniel/code/PersonalCloud/Shared/bin/release/net5.0/PersonalCloud.Shared.deps.json
+/home/daniel/code/PersonalCloud/Shared/bin/release/net5.0/PersonalCloud.Shared.dll
+/home/daniel/code/PersonalCloud/Shared/bin/release/net5.0/ref/PersonalCloud.Shared.dll
+/home/daniel/code/PersonalCloud/Shared/bin/release/net5.0/PersonalCloud.Shared.pdb
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/PersonalCloud.Shared.csproj.AssemblyReference.cache
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/PersonalCloud.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/PersonalCloud.Shared.AssemblyInfoInputs.cache
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/PersonalCloud.Shared.AssemblyInfo.cs
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/PersonalCloud.Shared.csproj.CoreCompileInputs.cache
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/PersonalCloud.Shared.dll
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/ref/PersonalCloud.Shared.dll
+/home/daniel/code/PersonalCloud/Shared/obj/release/net5.0/PersonalCloud.Shared.pdb

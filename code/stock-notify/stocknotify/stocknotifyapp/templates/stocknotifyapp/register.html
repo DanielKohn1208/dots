@@ -1,0 +1,11 @@
+{% extends 'stocknotifyapp/base.html' %}
+{%block title%}Suggestions-Login{%endblock%}
+{%block content%}
+<h1>Create account </h1>
+<form action='/register/' method="POST">
+	{% csrf_token %}
+	{{ form }}
+	<input class="btn btn-primary" type="submit" value="Login">
+</form>
+
+{%endblock%}

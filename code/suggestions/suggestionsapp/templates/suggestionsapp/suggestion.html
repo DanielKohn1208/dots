@@ -1,0 +1,72 @@
+{% extends 'suggestionsapp/base.html' %}
+{%block title%}Suggestions-Suggestion{%endblock%}
+{%block content %}
+
+<div class="my-3 border border-dark border-4 rounded rounded-3">
+	<div class='ps-2 pe-2 pt-2'>
+		<div class="d-flex justify-content-between mt-3 align-items-center">
+			<h1 class="flex-fill ">{{suggestion.title}}</h1>
+			{%if suggestion.status == 'OP'%}
+				<h5 class="border-warning text-warning border border-3 p-2 rounded-pill">Status: Open</h5>
+			{%elif suggestion.status == 'DO'%}
+				<h5 class="border-success text-success border border-3 p-2 rounded-pill">Status: Done</h5>
+			{%elif suggestion.status == 'CL'%}
+				<h5 class="border-danger text-danger border border-3 p-2 rounded-pill">Status: Closed</h5>
+			{%elif suggestion.status == 'IP'%}
+				<h5 class="border-primary text-primary border border-3 p-2 rounded-pill">Status: In Progress</h5>
+			{%endif%}
+		</div>
+		<p class="fs-5">{{suggestion.description}}</p>
+
+		{% load static %}
+
+		{% if request.user.is_authenticated %}	
+			{%if hasLiked == True%}
+				<a href="{%url 'unlike' suggestionId=suggestion.id %}">
+					<div class="d-flex justify-content-start mt-3 align-items-center">
+						<img class="pe-3" src="{% static 'thumb-up.svg' %}">
+						<p class="pt-3">Likes: {{totalLikes}}</p>
+					</div>
+				</a>
+			{%else%}
+				<a href="{%url 'like' suggestionId=suggestion.id %}">
+					<div class="d-flex justify-content-start mt-3 align-items-center">
+						<img class="pe-3" src="{% static 'thumb-up-outline.svg' %}">
+						<p class="pt-3">Likes: {{totalLikes}}</p>
+					</div>
+				</a>
+			{%endif%}
+		{%else%}
+			<div class="d-flex justify-content-start mt-3 align-items-center">
+				<img class="pe-3" src="{% static 'thumb-up-outline.svg' %}">
+				<p class="pt-3">Likes: {{totalLikes}}</p>
+			</div>
+		{%endif%}
+	</div>
+</div>
+
+<h5>Comments:</h5>
+{%for comment in comments%}
+	<div class="mb-3 border border-3 rounded rounded-3">
+		<div class="pt-2 ps-2 pr-2">
+			<h5>{{comment.creator.username}}</h5>
+			<p>{{comment.content}}</p>
+			<p><small>{{comment.datePosted}}</small></p>
+		</div>
+	</div>
+{%endfor%}
+
+{% if request.user.is_authenticated %}
+<form action="/suggestion/{{suggestion.id}}/" method="POST">
+	{% csrf_token %}
+	<div class="mb-3">
+		{{form}}
+	</div>
+	<input type="Submit" class="btn btn-primary" value="Comment">
+</form>
+{%else%}
+<p>You need to create an account to comment</p>
+{%endif%}
+
+{%endblock%}
+

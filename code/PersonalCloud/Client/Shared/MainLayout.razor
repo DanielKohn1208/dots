@@ -1,0 +1,35 @@
+@inherits LayoutComponentBase
+@inject HttpClient _httpClient
+@inject NavigationManager _navigationManager
+
+<div class="page">
+
+    <div class="main">
+        <AuthorizeView>
+            <Authorized>
+                <NavMenu></NavMenu>
+            </Authorized>
+            <NotAuthorized>
+            </NotAuthorized>
+        </AuthorizeView>
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+
+<CascadingBlazoredModal>
+</CascadingBlazoredModal>
+@code{
+    private async Task LogoutUser()
+    {
+        var result = await _httpClient.GetAsync("user/logoutuser");
+        _navigationManager.NavigateTo("/",true);
+    }
+
+    private void LoginUser()
+    {
+        _navigationManager.NavigateTo("/",true);
+
+    }
+}

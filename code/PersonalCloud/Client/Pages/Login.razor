@@ -1,0 +1,49 @@
+﻿@page "/"
+@using PersonalCloud.Shared.Models
+@inject NavigationManager _navigationManager
+@inject HttpClient _httpClient
+@inject ILoginViewModel _loginViewModel
+
+<h2><b>Login To Personal Cloud</b></h2>
+<hr>
+
+<div class="mb-3">
+    <label for="inputUsername" class="form-label">Username</label> 
+    <input id="inputUsername" type="text" @bind="_loginViewModel.UserName" class="form-control" placeholder="User Name">
+</div>
+
+<div class="mb-3">
+    <label for="inputPassword" class="form-label">Password</label> 
+    <input id="inputPassword" type="password" @bind="_loginViewModel.Password" class="form-control" placeholder="Password">
+</div>
+
+<div class="mb-3">
+    <button class="btn btn-outline-dark" @onclick="LoginUser">Login</button>
+</div>
+<p class="text-danger mt-2">@Message</p>
+@code{
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState { get; set;}
+    
+    public string Message{get; set;}
+    public async Task LoginUser()
+    {
+        var success = await _loginViewModel.LoginUser();
+        if(success) 
+        {
+            _navigationManager.NavigateTo("/", true);
+            return;
+        }
+        Message = "The username or password entered is incorrect";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationState;
+        if(authState.User.Identity.IsAuthenticated)
+        {
+            _navigationManager.NavigateTo("/files");
+        }
+
+    }
+}

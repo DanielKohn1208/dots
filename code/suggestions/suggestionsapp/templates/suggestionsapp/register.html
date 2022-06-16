@@ -1,0 +1,23 @@
+{% extends 'suggestionsapp/base.html' %}
+{%block title%}Suggestions-Login{%endblock%}
+{%block content%}
+<div class="login">
+
+	 {% if messages %}
+			{% for message in messages %}
+
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+	{% endif %}
+	<h1>Create account </h1>
+	<form action='/register/' method="POST">
+		{% csrf_token %}
+		{{ form }}
+    <input class="btn btn-primary" type="submit" value="Submit">
+	</form>
+</div>
+
+{%endblock%}

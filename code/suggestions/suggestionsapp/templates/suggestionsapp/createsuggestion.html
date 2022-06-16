@@ -1,0 +1,20 @@
+{% extends 'suggestionsapp/base.html' %}
+{%block title%}Suggestions-Create Suggestion{%endblock%}
+{% block content%}
+<h1>Create Suggestion</h1>
+{% if messages %}
+	{% for message in messages %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			<a href="{%url 'suggestion' id=suggestionId%}">{{ message }}</a>
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endfor %}
+{% endif %}
+<form action='/createsuggestion/' method="POST">
+	{% csrf_token %}
+	<div class="mb-3">
+		{{form}}
+	</div>
+	<input type="Submit" class="btn btn-primary" value="Create Suggestion">
+</form>
+{% endblock %}

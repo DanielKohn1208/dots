@@ -1,0 +1,92 @@
+@page "/settings"
+@using System.Security.Claims
+@inject ISettingsViewModel _settingsViewModel
+@inject NavigationManager _navigationManager
+<h1>Settings Page</h1>
+
+<h3>Change Username</h3>
+<div class="mb-3">
+        <label for="inputUsername" class="form-label">New Username</label> 
+        <input id="inputUsername" type="text" @bind="@_settingsViewModel.NewUsername" class="form-control" placeholder="New Username">
+</div>
+<div class="mb-3">
+    <button class="btn btn-outline-dark" @onclick="ChangeUsername">Change Username</button>
+</div>
+<p class="text-danger">@UsernameErrorMessage</p>
+
+<h3>Change Password</h3>
+<div class="mb-3">
+        <label for="inputPassword" class="form-label">New Password</label> 
+        <input id="inputPassword" type="password" @bind="@_settingsViewModel.NewPassword" class="form-control" placeholder="New Password">
+        <p class="text-danger"></p>
+</div>
+<div class="mb-3">
+        <label for="inputPassword" class="form-label">New Password Again</label> 
+        <input id="inputPassword" type="Password" @bind="NewPasswordComparison" class="form-control" placeholder="New Password Again">
+        <p class="text-danger"></p>
+</div>
+<div class="mb-3">
+    <button class="btn btn-outline-dark" @onclick="ChangePassword">Change Password</button>
+</div>
+<h3>Delete User</h3>
+<div class="mb-3">
+    <button class="btn btn-outline-danger" @onclick="DeleteAccount">Delete Account</button>
+</div>
+
+@code{
+
+    public string UsernameErrorMessage{get; set;} = String.Empty;
+    public string PasswordErrorMessage{get; set;} = String.Empty;
+    protected string NewPasswordComparison{get; set;}
+
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState{get; set;}
+   
+    protected async Task ChangeUsername()
+    {
+        UsernameErrorMessage = String.Empty;
+        var authState = await authenticationState;
+        if(authState.User.FindFirst(ClaimTypes.Name).Value == _settingsViewModel.NewUsername)
+        {
+            UsernameErrorMessage = "This is already your current username";
+            return;
+        }
+        if(_settingsViewModel.NewUsername==null || _settingsViewModel.NewUsername.Length > 16)
+        {
+            UsernameErrorMessage = "Your username must be between 1 and 16 characters long";
+            return;
+        }
+        var response = await _settingsViewModel.PostNewUsername();
+        if(!response.IsSuccessStatusCode)
+        {
+            UsernameErrorMessage = await response.Content.ReadAsStringAsync();
+            return;
+        }
+        _navigationManager.NavigateTo("/settings",true);
+    }
+
+    protected async Task ChangePassword()
+    {
+        if(NewPasswordComparison != _settingsViewModel.NewPassword)
+        {
+            PasswordErrorMessage = "The passwords do not match";
+            return;
+        }
+        if(_settingsViewModel.NewPassword == null || _settingsViewModel.NewUsername.Length > 16) 
+        {
+            PasswordErrorMessage = "Your password must be between 1 and 16 characters longs";
+        }
+        var response = await _settingsViewModel.PostNewPassword();
+        if(response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Password Changed successfully");
+        }
+    }
+
+    protected async Task DeleteAccount()
+    {
+        await _settingsViewModel.DeleteAccount();
+        _navigationManager.NavigateTo("/",true);
+    }
+
+}

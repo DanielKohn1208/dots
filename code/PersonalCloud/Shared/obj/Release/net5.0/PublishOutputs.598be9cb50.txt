@@ -1,0 +1,14 @@
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/PersonalCloud.Shared.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/PersonalCloud.Shared.deps.json
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/PersonalCloud.Shared.pdb
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.EntityFrameworkCore.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.Caching.Abstractions.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.Caching.Memory.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.DependencyInjection.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.Logging.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.Logging.Abstractions.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.Options.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/Microsoft.Extensions.Primitives.dll
+/home/daniel/code/PersonalCloud/Shared/bin/Release/net5.0/publish/System.Diagnostics.DiagnosticSource.dll
